@@ -212,7 +212,16 @@ def predict(image_path, model, topk=5,process_unit='gpu'):
         with torch.no_grad():
             output=model.forward(img)
     probability = torch.exp(output)
-    return probability.topk(topk)
+    probability_topk = torch.topk(probability, topk)[0].tolist()[0]
+    index_topk = torch.topk(probability, topk)[1].tolist()[0]
+
+    #Return class top_k
+    index = []
+    for i in range(len(model.class_to_idx)):
+        index.append(list(model.class_to_idx.items())[i][0])
+    cat_topk = [index[i] for i in index_topk]
+    
+    return probability_topk,cat_topk
 
 
 

@@ -28,11 +28,9 @@ model = utilits.load_checkpoint(path)
 with open(json_file, 'r') as json_file:
     cat_to_name = json.load(json_file)
     
-probs = utilits.predict(path_img,model,no_of_outputs,mode)
-cats = probs.indices.cpu().numpy()[0]
-labels = [cat_to_name[str(index+1)] for index in cats]
-final_probs = np.array( probs.values.cpu().numpy()[0])
+probs,classes= utilits.predict(path_img,model,no_of_outputs,mode)
+classes = [cat_to_name[c] for c in classes]
 
 for i in range(no_of_outputs):
-    print(" {}. {} : {:.3f}".format(i+1,labels[i],final_probs[i]))
+    print(" {}. {} : {:.3f}".format(i+1,classes[i],probs[i]))
     
